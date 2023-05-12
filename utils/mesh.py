@@ -101,9 +101,4 @@ def create_three_smooth_monkeys(
 # https://docs.blender.org/api/current/bpy.types.VertexGroup.html
 def add_vertex_group(mesh_object: bpy.types.Object, name: str = "Group") -> bpy.types.VertexGroup:
 
-    # TODO: Check whether the object has a mesh data
-    # TODO: Check whether the object already has a vertex group with the specified name
-
-    vertex_group = mesh_object.vertex_groups.new(name=name)
-
-    return vertex_group
+    return mesh_object.vertex_groups.new(name=name)

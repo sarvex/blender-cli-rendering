@@ -49,7 +49,7 @@ def arrange_nodes(node_tree: bpy.types.NodeTree, verbose: bool = False) -> None:
         print("-----------------")
         print("Target nodes:")
         for node in node_tree.nodes:
-            print("- " + node.name)
+            print(f"- {node.name}")
 
     # In the first stage, expand nodes overly
     target_space *= 2.0
@@ -76,14 +76,16 @@ def arrange_nodes(node_tree: bpy.types.NodeTree, verbose: bool = False) -> None:
                 if C >= target_space * threshold_factor:
                     continue
 
-                lagrange = C / (grad_C_x_from * grad_C_x_from + grad_C_x_to * grad_C_x_to)
+                lagrange = C / (grad_C_x_from**2 + grad_C_x_to**2)
                 delta_x_from = -lagrange * grad_C_x_from
                 delta_x_to = -lagrange * grad_C_x_to
 
                 link.from_node.location[0] += k * delta_x_from
                 link.to_node.location[0] += k * delta_x_to
 
-                squared_deltas_sum += k * k * (delta_x_from * delta_x_from + delta_x_to * delta_x_to)
+                squared_deltas_sum += k**2 * (
+                    delta_x_from * delta_x_from + delta_x_to * delta_x_to
+                )
 
         if fix_vertical_location:
             k = 0.5 if not second_stage else 0.05
@@ -109,14 +111,16 @@ def arrange_nodes(node_tree: bpy.types.NodeTree, verbose: bool = False) -> None:
                 C = y_from - y_to
                 grad_C_y_from = 1.0
                 grad_C_y_to = -1.0
-                lagrange = C / (grad_C_y_from * grad_C_y_from + grad_C_y_to * grad_C_y_to)
+                lagrange = C / (grad_C_y_from**2 + grad_C_y_to**2)
                 delta_y_from = -lagrange * grad_C_y_from
                 delta_y_to = -lagrange * grad_C_y_to
 
                 link.from_node.location[1] += k * delta_y_from
                 link.to_node.location[1] += k * delta_y_to
 
-                squared_deltas_sum += k * k * (delta_y_from * delta_y_from + delta_y_to * delta_y_to)
+                squared_deltas_sum += k**2 * (
+                    delta_y_from * delta_y_from + delta_y_to * delta_y_to
+                )
 
         if fix_overlaps and second_stage:
             k = 0.9
@@ -166,35 +170,36 @@ def arrange_nodes(node_tree: bpy.types.NodeTree, verbose: bool = False) -> None:
                     if C_x > C_y:
                         grad_C_x_1 = 1.0 if cx_1 - cx_2 >= 0.0 else -1.0
                         grad_C_x_2 = -1.0 if cx_1 - cx_2 >= 0.0 else 1.0
-                        lagrange = C_x / (grad_C_x_1 * grad_C_x_1 + grad_C_x_2 * grad_C_x_2)
+                        lagrange = C_x / (grad_C_x_1**2 + grad_C_x_2**2)
                         delta_x_1 = -lagrange * grad_C_x_1
                         delta_x_2 = -lagrange * grad_C_x_2
 
                         node_1.location[0] += k * delta_x_1
                         node_2.location[0] += k * delta_x_2
 
-                        squared_deltas_sum += k * k * (delta_x_1 * delta_x_1 + delta_x_2 * delta_x_2)
+                        squared_deltas_sum += k**2 * (delta_x_1 * delta_x_1 + delta_x_2 * delta_x_2)
                     else:
                         grad_C_y_1 = 1.0 if cy_1 - cy_2 >= 0.0 else -1.0
                         grad_C_y_2 = -1.0 if cy_1 - cy_2 >= 0.0 else 1.0
-                        lagrange = C_y / (grad_C_y_1 * grad_C_y_1 + grad_C_y_2 * grad_C_y_2)
+                        lagrange = C_y / (grad_C_y_1**2 + grad_C_y_2**2)
                         delta_y_1 = -lagrange * grad_C_y_1
                         delta_y_2 = -lagrange * grad_C_y_2
 
                         node_1.location[1] += k * delta_y_1
                         node_2.location[1] += k * delta_y_2
 
-                        squared_deltas_sum += k * k * (delta_y_1 * delta_y_1 + delta_y_2 * delta_y_2)
+                        squared_deltas_sum += k**2 * (delta_y_1 * delta_y_1 + delta_y_2 * delta_y_2)
 
         if verbose:
-            print("Iteration #" + str(i) + ": " + str(previous_squared_deltas_sum - squared_deltas_sum))
+            print(
+                f"Iteration #{str(i)}: {str(previous_squared_deltas_sum - squared_deltas_sum)}"
+            )
 
         # Check the termination conditiion
         if math.fabs(previous_squared_deltas_sum - squared_deltas_sum) < epsilon:
             if second_stage:
                 break
-            else:
-                target_space = 0.5 * target_space
-                second_stage = True
+            target_space = 0.5 * target_space
+            second_stage = True
 
         previous_squared_deltas_sum = squared_deltas_sum

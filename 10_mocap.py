@@ -50,8 +50,7 @@ def create_armature_from_bvh(bvh_path: str) -> bpy.types.Object:
                             use_fps_scale=True,
                             update_scene_fps=False,
                             update_scene_duration=True)
-    armature = bpy.context.object
-    return armature
+    return bpy.context.object
 
 
 def build_scene(scene: bpy.types.Scene, input_bvh_path: str) -> bpy.types.Object:

@@ -31,8 +31,7 @@ def set_scene_objects():
     sun_object.data.node_tree.nodes["Emission"].inputs["Strength"].default_value = 3.0
 
     bpy.ops.object.empty_add(location=(0.0, -0.70, 1.0))
-    focus_target = bpy.context.object
-    return focus_target
+    return bpy.context.object
 
 
 def set_composition(scene):

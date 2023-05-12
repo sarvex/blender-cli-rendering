@@ -147,7 +147,7 @@ def set_cycles_renderer(scene: bpy.types.Scene,
     print("----")
     print("The following devices will be used for path tracing:")
     for d in bpy.context.preferences.addons["cycles"].preferences.devices:
-        print("- {}".format(d["name"]))
+        print(f'- {d["name"]}')
     print("----")
 
 

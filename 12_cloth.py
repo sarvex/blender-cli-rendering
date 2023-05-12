@@ -98,8 +98,7 @@ def set_scene_objects() -> bpy.types.Object:
     cloth_object.data.materials.append(bpy.data.materials["Fabric02"])
 
     bpy.ops.object.empty_add(location=(0.0, -0.75, 1.05))
-    focus_target = bpy.context.object
-    return focus_target
+    return bpy.context.object
 
 
 # Args

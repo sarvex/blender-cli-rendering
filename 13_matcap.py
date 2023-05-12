@@ -24,8 +24,7 @@ def set_scene_objects():
     current_object.data.materials.append(mat)
 
     bpy.ops.object.empty_add(location=(0.0, 0.0, 0.0))
-    focus_target = bpy.context.object
-    return focus_target
+    return bpy.context.object
 
 
 # Args

@@ -14,12 +14,14 @@ import utils
 def set_scene_objects() -> bpy.types.Object:
     num_suzannes = 7
     for index in range(num_suzannes):
-        utils.create_smooth_monkey(location=((index - (num_suzannes - 1) / 2) * 2.8, 0.0, 1.0),
-                                   name="Suzanne" + str(index))
+        utils.create_smooth_monkey(
+            location=((index - (num_suzannes - 1) / 2) * 2.8, 0.0, 1.0),
+            name=f"Suzanne{str(index)}",
+        )
 
     utils.create_plane(size=20.0)
 
-    return bpy.data.objects["Suzanne" + str(int((num_suzannes - 1) / 2))]
+    return bpy.data.objects[f"Suzanne{int((num_suzannes - 1) / 2)}"]
 
 
 # Args

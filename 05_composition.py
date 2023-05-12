@@ -97,8 +97,7 @@ def set_scene_objects() -> bpy.types.Object:
     current_object.data.materials.append(mat)
 
     bpy.ops.object.empty_add(location=(0.0, -0.75, 1.0))
-    focus_target = bpy.context.object
-    return focus_target
+    return bpy.context.object
 
 
 def build_scene_composition(scene: bpy.types.Scene) -> None:

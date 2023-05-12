@@ -14,10 +14,7 @@ import utils
 
 
 def get_random_numbers(length: int) -> List[float]:
-    numbers = []
-    for i in range(length):
-        numbers.append(random.random())
-    return numbers
+    return [random.random() for _ in range(length)]
 
 
 def get_color(x: float) -> Tuple[float, float, float]:
@@ -48,7 +45,7 @@ def set_scene_objects() -> bpy.types.Object:
     mesh.vertex_colors.new(name='Col')
     random_numbers = get_random_numbers(len(mesh.vertex_colors['Col'].data))
     for index, vertex_color in enumerate(mesh.vertex_colors['Col'].data):
-        vertex_color.color = get_color(random_numbers[index // 3]) + tuple([1.0])
+        vertex_color.color = get_color(random_numbers[index // 3]) + (1.0, )
 
     # Setup a material with wireframe visualization and per-face colors
     mat = utils.add_material("Material_Visualization", use_nodes=True, make_node_tree_empty=True)
@@ -75,9 +72,7 @@ def set_scene_objects() -> bpy.types.Object:
     utils.arrange_nodes(mat.node_tree)
 
     bpy.ops.object.empty_add(location=(0.0, -0.8, 0.0))
-    focus_target = bpy.context.object
-
-    return focus_target
+    return bpy.context.object
 
 
 # Args
